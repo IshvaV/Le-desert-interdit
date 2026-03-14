@@ -1,3 +1,5 @@
+package Conway;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -32,7 +34,7 @@ public class VueGrille extends JPanel implements Observer {
     }
 
     /**
-     * L'interface [Observer] demande de fournir une méthode [update], qui
+     * L'interface [Conway.Observer] demande de fournir une méthode [update], qui
      * sera appelée lorsque la vue sera notifiée d'un changement dans le
      * modèle. Ici on se content de réafficher toute la grille avec la méthode
      * prédéfinie [repaint].
@@ -63,10 +65,10 @@ public class VueGrille extends JPanel implements Observer {
     }
     /**
      * Fonction auxiliaire de dessin d'une cellule.
-     * Ici, la classe [Cellule] ne peut être désignée que par l'intermédiaire
-     * de la classe [CModele] à laquelle elle est interne, d'où le type
-     * [CModele.Cellule].
-     * Ceci serait impossible si [Cellule] était déclarée privée dans [CModele].
+     * Ici, la classe [Conway.Cellule] ne peut être désignée que par l'intermédiaire
+     * de la classe [Conway.CModele] à laquelle elle est interne, d'où le type
+     * [Conway.CModele.Conway.Cellule].
+     * Ceci serait impossible si [Conway.Cellule] était déclarée privée dans [Conway.CModele].
      */
     private void paint(Graphics g, Cellule c, int x, int y) {
         /** Sélection d'une couleur. */

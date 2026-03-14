@@ -1,7 +1,9 @@
+package Conway;
+
 /**
  * Le modèle : le coeur de l'application.
  *
- * Le modèle étend la classe [Observable] : il va posséder un certain nombre
+ * Le modèle étend la classe [Conway.Observable] : il va posséder un certain nombre
  * d'observateurs (ici, un : la partie de la vue responsable de l'affichage)
  * et devra les prévenir avec [notifyObservers] lors des modifications.
  * Voir la méthode [avance()] pour cela.
@@ -108,12 +110,12 @@ public class CModele extends Observable {
         return cellules[x][y];
     }
     /**
-     * Notez qu'à l'intérieur de la classe [CModele], la classe interne est
-     * connue sous le nom abrégé [Cellule].
-     * Son nom complet est [CModele.Cellule], et cette version complète est
-     * la seule à pouvoir être utilisée depuis l'extérieur de [CModele].
-     * Dans [CModele], les deux fonctionnent.
+     * Notez qu'à l'intérieur de la classe [Conway.CModele], la classe interne est
+     * connue sous le nom abrégé [Conway.Cellule].
+     * Son nom complet est [Conway.CModele.Conway.Cellule], et cette version complète est
+     * la seule à pouvoir être utilisée depuis l'extérieur de [Conway.CModele].
+     * Dans [Conway.CModele], les deux fonctionnent.
      */
 }
 
-/** Fin de la classe CModele. */
+/** Fin de la classe Conway.CModele. */

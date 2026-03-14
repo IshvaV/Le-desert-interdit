@@ -1,3 +1,5 @@
+package Conway;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,7 +17,7 @@ public class Controleur implements ActionListener {
      * Remarque : comme cette classe est interne, cette inscription
      * explicite du modèle est inutile. On pourrait se contenter de
      * faire directement référence au modèle enregistré pour la classe
-     * englobante [VueCommandes].
+     * englobante [Conway.VueCommandes].
      */
     CModele modele;
     public Controleur(CModele modele) { this.modele = modele; }

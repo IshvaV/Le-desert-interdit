@@ -1,3 +1,5 @@
+package Conway;
+
 import javax.swing.*;
 
 /**

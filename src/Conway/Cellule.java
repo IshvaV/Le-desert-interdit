@@ -1,3 +1,5 @@
+package Conway;
+
 /**
  * Définition d'une classe pour les cellules.
  * Cette classe fait encore partie du modèle.
@@ -44,4 +46,4 @@ public class Cellule {
         return etat;
     }
 }
-/** Fin de la classe Cellule, et du modèle en général. */
+/** Fin de la classe Conway.Cellule, et du modèle en général. */
