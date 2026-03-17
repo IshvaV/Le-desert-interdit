@@ -1,4 +1,13 @@
 package Modele;
 
-public class PisteDecollage {
+public class PisteDecollage extends Tuile {
+
+    public PisteDecollage(int x, int y, int nbSable){
+        super(x, y, nbSable);
+    }
+
+    @Override
+    public void explore() {
+        super.explored = true;
+    }
 }

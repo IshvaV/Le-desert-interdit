@@ -1,4 +1,3 @@
 package Modele;
 
-public enum ModeAction {
-}
+public enum ModeAction { }
