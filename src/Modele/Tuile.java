@@ -23,25 +23,30 @@ public abstract class Tuile {
         return nbSable;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
     public void enleverSable() {
         if (this.nbSable > 0) this.nbSable--;
     }
 
     public boolean blocked() {
-        return this.nbSable == 2;
+        return this.nbSable >= 2;
     }
 
     public boolean isExplored() {
         return explored;
     }
 
-    public abstract void explore();
-
+    public void explore() {
+        explored = true;
+    }
     public void setPiece(Piece piece) {
         this.piece = piece;
-    }
-
-    public boolean hasPlayer(Joueur j) {
-        return this == j;
     }
 }

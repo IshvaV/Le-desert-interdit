@@ -6,8 +6,4 @@ public class OeilTempete extends Tuile {
         super(x,y,0);
     }
 
-    @Override
-    public void explore() {
-        super.explored = true;
-    }
 }

@@ -2,20 +2,20 @@ package Modele;
 
 public class TuileIndice extends Tuile {
 
-    public TuileIndice(int x, int y, int nbSable) {
+    private Piece typePiece;
+    private boolean estLigne;
+
+    public TuileIndice(int x, int y, int nbSable, Piece typePiece, boolean estLigne) {
         super(x, y, nbSable);
+        this.typePiece = typePiece;
+        this.estLigne = estLigne;
     }
 
-    @Override
-    public void explore() {
-        super.explored = true;
+    public Piece getTypePiece() {
+        return typePiece;
     }
 
-    public int getX(){
-        return this.getX();
-    }
-
-    public int getY(){
-        return this.getY();
+    public boolean isEstLigne() {
+        return estLigne;
     }
 }

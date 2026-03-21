@@ -6,8 +6,4 @@ public class ZoneCrash extends Tuile {
         super(x, y, nbSable);
     }
 
-    @Override
-    public void explore() {
-        super.explored = true;
-    }
 }

@@ -6,7 +6,4 @@ public class Oasis extends Tuile{
         super(x, y, nbSable);
     }
 
-    public void explore() {
-        super.explored = true;
-    }
 }
