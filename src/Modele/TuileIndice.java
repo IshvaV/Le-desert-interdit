@@ -2,16 +2,16 @@ package Modele;
 
 public class TuileIndice extends Tuile {
 
-    private Piece typePiece;
+    private TypePiece typePiece;
     private boolean estLigne;
 
-    public TuileIndice(int x, int y, int nbSable, Piece typePiece, boolean estLigne) {
+    public TuileIndice(int x, int y, int nbSable, TypePiece typePiece, boolean estLigne) {
         super(x, y, nbSable);
         this.typePiece = typePiece;
         this.estLigne = estLigne;
     }
 
-    public Piece getTypePiece() {
+    public TypePiece getTypePiece() {
         return typePiece;
     }
 

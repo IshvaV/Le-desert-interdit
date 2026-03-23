@@ -35,6 +35,10 @@ public abstract class Tuile {
         if (this.nbSable > 0) this.nbSable--;
     }
 
+    public void ajouterSable() {
+        if (nbSable < 5) this.nbSable++;
+    }
+
     public boolean blocked() {
         return this.nbSable >= 2;
     }
