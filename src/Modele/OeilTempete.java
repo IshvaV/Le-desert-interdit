@@ -6,4 +6,7 @@ public class OeilTempete extends Tuile {
         super(x,y,0);
     }
 
+    public OeilTempete() {
+        super();
+    }
 }

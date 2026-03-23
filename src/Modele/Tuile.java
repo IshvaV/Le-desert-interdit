@@ -53,4 +53,7 @@ public abstract class Tuile {
     public void setPiece(Piece piece) {
         this.piece = piece;
     }
+    public void ajouterSable(int nbSable) {
+        this.nbSable ++;
+    }
 }
