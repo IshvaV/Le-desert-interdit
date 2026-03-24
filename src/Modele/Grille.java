@@ -14,6 +14,8 @@ public class Grille {
         tuilesTableau = new Tuile[X][Y];
 
         Random r = new Random();
+
+        ArrayList<Tunnel> tunnelsTrouves = new ArrayList<>();
         for (int i = 0; i < X; i++) {
             for (int j = 0; j < Y; j++) {
 
@@ -76,7 +78,25 @@ public class Grille {
                 }
 
                 if (losange.contains(i + "," + j)) tuilesTableau[i][j].ajouterSable();
+                if (tuilesTableau[i][j] instanceof Tunnel tunnel){
+                    tunnelsTrouves.add(tunnel);
+                }
             }
         }
+        for (Tunnel connect : tunnelsTrouves) {
+            for (Tunnel connecte2 : tunnelsTrouves) {
+                if (connect != connecte2) {
+                    connect.ajouterTunnelConnecte(connecte2);
+                }
+            }
+        }
+    }
+
+    public Tuile[][] getTuilesTableau(){
+        return tuilesTableau;
+    }
+
+    public void deplacerTuiles(Direction vent, int f) {
+
     }
 }
