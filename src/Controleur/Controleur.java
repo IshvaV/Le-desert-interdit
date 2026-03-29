@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 public class Controleur implements ActionListener {
 
     CModele modele;
-    Controleur(CModele modele) {
+    public Controleur(CModele modele) {
         this.modele = modele;
     }
 
