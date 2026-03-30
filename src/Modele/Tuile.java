@@ -55,10 +55,6 @@ public abstract class Tuile {
         this.piece = piece;
     }
 
-    public void ajouterSable(int nbSable) {
-        this.nbSable++;
-    }
-
     public void deplacer(Direction direction) {
         switch (direction) {
             case SUD:
@@ -75,7 +71,6 @@ public abstract class Tuile {
                 if (x > 0) {
                     x--;
                 }
-                x++;
                 break;
             case NORD:
                 if (y > 0) {

@@ -6,22 +6,26 @@ import java.util.Random;
 public class Tempete {
 
     private double niveau;
-    private int limit;
+    private double limit;
+
     // difficulty 0: Novice, 1: Normal, 2: Elite, 3: Légendaire
-    public Tempete(int difficulty, int joueurnb){
+    public Tempete(Difficulte difficulte){
+        this.limit = 7.0;
         // Initialisation du niveau de la tempête en fonction de la difficulté
-        int[] tempdif ={0,2,4,6};
-
-        int difficultyindex = tempdif[difficulty];
-        if (joueurnb == 2){
-            this.limit = 12;
-        } else if (joueurnb == 3 || joueurnb == 4){
-            this.limit = 10;
-        } else {
-            this.limit = 8;
+        switch (difficulte) {
+            case NOVICE:
+                this.niveau = 2.0;
+                break;
+            case NORMAL:
+                this.niveau = 3.0;
+                break;
+            case ELITE:
+                this.niveau = 4.0;
+                break;
+            case LEGENDAIRE:
+                this.niveau = 5.0;
+                break;
         }
-
-        this.niveau = difficultyindex;
     }
 
     public void ventSouffle(Grille g) {
@@ -36,8 +40,13 @@ public class Tempete {
 
     public void vagueChaleur(Joueur[] joueurs) {
         for (Joueur joueur : joueurs) {
-            if (!(joueur.getPosition() instanceof Tunnel))
-                joueur.boire();
+            if (joueur != null) {
+                if (!(joueur.getPosition() instanceof Tunnel))
+                    joueur.boire();
+                if (joueur.estMort()) {
+                    joueur.setPosition(null);
+                }
+            }
         }
     }
 
@@ -45,7 +54,7 @@ public class Tempete {
         if (niveau + 0.5 >= limit) {
             return false;
         }
-        this.niveau++;
+        this.niveau+= 0.5;
         return true;
     }
 }
