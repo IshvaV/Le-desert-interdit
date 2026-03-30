@@ -97,6 +97,16 @@ public class Grille {
     }
 
     public void deplacerTuiles(Direction vent, int f) {
+        for (int i = 0; i < X; i++) {
+            for (int j = 0; j < Y; j++) {
+                if (tuilesTableau[i][j] instanceof OeilTempete){
+                    for (int k = 0; k < f; k++){
+                        tuilesTableau[i][j].deplacer(vent);
+                    }
 
+
+                }
+            }
+        }
     }
 }

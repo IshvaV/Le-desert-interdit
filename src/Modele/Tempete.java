@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Tempete {
-    private final int[] cran  = {2,2,2,3,3,3,4,4,5,5,6,6,6};
-    private double niveauindex;
-    private int limitindex;
+
+    private double niveau;
+    private int limit;
     // difficulty 0: Novice, 1: Normal, 2: Elite, 3: Légendaire
     public Tempete(int difficulty, int joueurnb){
         // Initialisation du niveau de la tempête en fonction de la difficulté
@@ -14,14 +14,14 @@ public class Tempete {
 
         int difficultyindex = tempdif[difficulty];
         if (joueurnb == 2){
-            this.limitindex = 12;
+            this.limit = 12;
         } else if (joueurnb == 3 || joueurnb == 4){
-            this.limitindex = 10;
+            this.limit = 10;
         } else {
-            this.limitindex = 8;
+            this.limit = 8;
         }
 
-        this.niveauindex = difficultyindex;
+        this.niveau = difficultyindex;
     }
 
     public void ventSouffle(Grille g) {
@@ -34,7 +34,7 @@ public class Tempete {
         g.deplacerTuiles(directionAleatoire, force);
     }
 
-    public void vagueChaleur(ArrayList<Joueur> joueurs) {
+    public void vagueChaleur(Joueur[] joueurs) {
         for (Joueur joueur : joueurs) {
             if (!(joueur.getPosition() instanceof Tunnel))
                 joueur.boire();
@@ -42,10 +42,10 @@ public class Tempete {
     }
 
     public boolean tempeteSeDechaine() {
-        if (cran[(int) (this.niveauindex + 1)] >= limitindex) {
+        if (niveau + 0.5 >= limit) {
             return false;
         }
-        this.niveauindex ++;
+        this.niveau++;
         return true;
     }
 }

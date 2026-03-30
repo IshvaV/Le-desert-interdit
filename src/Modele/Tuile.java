@@ -2,7 +2,7 @@ package Modele;
 
 
 public abstract class Tuile {
-    private int x,y;
+    private int x, y;
     private int nbSable;
     protected boolean explored;
     private Piece piece;
@@ -50,10 +50,39 @@ public abstract class Tuile {
     public void explore() {
         explored = true;
     }
+
     public void setPiece(Piece piece) {
         this.piece = piece;
     }
+
     public void ajouterSable(int nbSable) {
-        this.nbSable ++;
+        this.nbSable++;
+    }
+
+    public void deplacer(Direction direction) {
+        switch (direction) {
+            case SUD:
+                if (y < 4) {
+                    y++;
+                }
+                break;
+            case EST:
+                if (x < 4) {
+                    x++;
+                }
+                break;
+            case OUEST:
+                if (x > 0) {
+                    x--;
+                }
+                x++;
+                break;
+            case NORD:
+                if (y > 0) {
+                    y--;
+                }
+                break;
+
+        }
     }
 }
