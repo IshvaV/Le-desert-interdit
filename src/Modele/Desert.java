@@ -11,9 +11,9 @@ public class Desert extends Observable {
     private ZoneCrash zc;
 
 
-    public Desert(int difficulty, int nbJoueurs) {
+    public Desert(Difficulte difficulte, int nbJoueurs) {
         this.grille = new Grille();
-        this.tempete = new Tempete(difficulty, nbJoueurs);
+        this.tempete = new Tempete(difficulte);
         this.nbJoueurs = nbJoueurs;
         this.joueurs = new Joueur[nbJoueurs+1];
         for (int i = 0; i < 5; i++) {
