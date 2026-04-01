@@ -51,7 +51,7 @@ public class CVue {
         grille = new VueGrille(modele);
         frame.add(grille);
         commandes = new VueCommandes(modele);
-        frame.add(commandes);
+        frame.add(commandes); //i cant hear you
         /**
          * Remarque : on peut passer à la méthode [add] des paramètres
          * supplémentaires indiquant où placer l'élément. Par exemple, si on

@@ -72,4 +72,8 @@ public class Desert extends Observable {
         }
         return true;
     }
+
+    public Grille getGrille() {
+        return grille;
+    }
 }

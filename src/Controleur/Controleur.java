@@ -1,15 +1,15 @@
 package Controleur;
 
-import Conway.CModele;
+import Modele.Desert;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Controleur implements ActionListener {
 
-    CModele modele;
-    public Controleur(CModele modele) {
-        this.modele = modele;
+    Desert desert;
+    public Controleur(Desert desert) {
+        this.desert = desert;
     }
 
     @Override
