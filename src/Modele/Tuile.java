@@ -31,6 +31,14 @@ public abstract class Tuile {
         return y;
     }
 
+    public int setX(int x) {
+        return this.x = x;
+    }
+
+    public int setY(int y) {
+        return this.y = y;
+    }
+
     public void enleverSable() {
         if (this.nbSable > 0) this.nbSable--;
     }
@@ -55,29 +63,4 @@ public abstract class Tuile {
         this.piece = piece;
     }
 
-    public void deplacer(Direction direction) {
-        switch (direction) {
-            case SUD:
-                if (y < 4) {
-                    y++;
-                }
-                break;
-            case EST:
-                if (x < 4) {
-                    x++;
-                }
-                break;
-            case OUEST:
-                if (x > 0) {
-                    x--;
-                }
-                break;
-            case NORD:
-                if (y > 0) {
-                    y--;
-                }
-                break;
-
-        }
-    }
 }

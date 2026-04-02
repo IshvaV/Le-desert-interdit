@@ -5,8 +5,9 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class Grille {
-    public static final int X=5, Y=5;
+    public static final int X = 5, Y = 5;
     private Tuile[][] tuilesTableau;
+
     Grille() {
         ArrayList<Integer> tirage = new ArrayList<>(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24));
         ArrayList<String> losange = new ArrayList<>(Arrays.asList("0,2", "1,1", "2,0", "3,1", "4,2", "3,3", "2,4", "1,3"));
@@ -23,7 +24,7 @@ public class Grille {
 
                 if (i == 2 && j == 2) {
                     tuilesTableau[i][j] = new OeilTempete(i, j);
-                }else {
+                } else {
                     tirage.remove(Integer.valueOf(tuile));
                     switch (tuile) {
                         case 1:
@@ -78,7 +79,7 @@ public class Grille {
                 }
 
                 if (losange.contains(i + "," + j)) tuilesTableau[i][j].ajouterSable();
-                if (tuilesTableau[i][j] instanceof Tunnel tunnel){
+                if (tuilesTableau[i][j] instanceof Tunnel tunnel) {
                     tunnelsTrouves.add(tunnel);
                 }
             }
@@ -92,19 +93,79 @@ public class Grille {
         }
     }
 
-    public Tuile[][] getTuilesTableau(){
+    public Tuile[][] getTuilesTableau() {
         return tuilesTableau;
     }
 
     public void deplacerTuiles(Direction vent, int f) {
-        for (int i = 0; i < X; i++) {
-            for (int j = 0; j < Y; j++) {
-                if (tuilesTableau[i][j] instanceof OeilTempete){
-                    for (int k = 0; k < f; k++){
-                        tuilesTableau[i][j].deplacer(vent);
+        int ox = -1, oy = -1;
+
+        boolean trouve = false;
+        for (Tuile[] t : tuilesTableau) {
+            for (Tuile tuile : t) {
+                if (tuile instanceof OeilTempete) {
+                    ox = tuile.getX();
+                    oy = tuile.getY();
+                    trouve = true;
+                    break;
+                }
+            }
+            if (trouve) break;
+        }
+
+        for (int k = 0; k < f; k++) {
+            switch (vent) {
+                case NORD -> {
+                    if (oy > 0) {
+                        Tuile temp = tuilesTableau[ox][oy - 1];
+                        tuilesTableau[ox][oy - 1] = tuilesTableau[ox][oy];
+                        tuilesTableau[ox][oy] = temp;
+                        oy--;
+                        tuilesTableau[ox][oy].setX(ox);
+                        tuilesTableau[ox][oy].setY(oy);
+                        tuilesTableau[ox][oy + 1].setX(ox);
+                        tuilesTableau[ox][oy + 1].setY(oy + 1);
+                        tuilesTableau[ox][oy + 1].ajouterSable();
                     }
-
-
+                }
+                case SUD -> {
+                    if (oy < Y - 1) {
+                        Tuile temp = tuilesTableau[ox][oy + 1];
+                        tuilesTableau[ox][oy + 1] = tuilesTableau[ox][oy];
+                        tuilesTableau[ox][oy] = temp;
+                        oy++;
+                        tuilesTableau[ox][oy].setX(ox);
+                        tuilesTableau[ox][oy].setY(oy);
+                        tuilesTableau[ox][oy - 1].setX(ox);
+                        tuilesTableau[ox][oy - 1].setY(oy - 1);
+                        tuilesTableau[ox][oy - 1].ajouterSable();
+                    }
+                }
+                case OUEST -> {
+                    if (ox > 0) {
+                        Tuile temp = tuilesTableau[ox - 1][oy];
+                        tuilesTableau[ox - 1][oy] = tuilesTableau[ox][oy];
+                        tuilesTableau[ox][oy] = temp;
+                        ox--;
+                        tuilesTableau[ox][oy].setX(ox);
+                        tuilesTableau[ox][oy].setY(oy);
+                        tuilesTableau[ox + 1][oy].setX(ox + 1);
+                        tuilesTableau[ox + 1][oy].setY(oy);
+                        tuilesTableau[ox + 1][oy].ajouterSable();
+                    }
+                }
+                case EST -> {
+                    if (ox < X - 1) {
+                        Tuile temp = tuilesTableau[ox + 1][oy];
+                        tuilesTableau[ox + 1][oy] = tuilesTableau[ox][oy];
+                        tuilesTableau[ox][oy] = temp;
+                        ox++;
+                        tuilesTableau[ox][oy].setX(ox);
+                        tuilesTableau[ox][oy].setY(oy);
+                        tuilesTableau[ox + 1][oy].setX(ox + 1);
+                        tuilesTableau[ox + 1][oy].setY(oy);
+                        tuilesTableau[ox + 1][oy].ajouterSable();
+                    }
                 }
             }
         }
