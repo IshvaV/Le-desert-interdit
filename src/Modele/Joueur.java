@@ -8,12 +8,15 @@ public class Joueur {
     private int gourde;
     private int actionsDispo;
     private ArrayList<Piece> inventaire;
+    private int id;
 
-    public Joueur(Tuile position) {
+
+    public Joueur(Tuile position, int id) {
         this.position = position;
         this.gourde = 5;
         this.actionsDispo = 4;
         this.inventaire = new ArrayList<>();
+        this.id = id;
     }
 
     public void boire() {
@@ -63,4 +66,13 @@ public class Joueur {
     public boolean aPiece(Piece piece) {
         return inventaire.contains(piece);
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getNbActions(){
+        return actionsDispo;
+    }
+
 }

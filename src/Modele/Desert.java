@@ -24,7 +24,7 @@ public class Desert extends Observable {
             }
         }
         for (int k = 0; k < nbJoueurs; k++){
-            joueurs[k] = new Joueur(zc);
+            joueurs[k] = new Joueur(zc, k);
 
 
         }
@@ -75,5 +75,13 @@ public class Desert extends Observable {
 
     public Grille getGrille() {
         return grille;
+    }
+
+    public Joueur[] getJoueurs() {
+        return joueurs;
+    }
+
+    public int getNbJoueurs() {
+        return nbJoueurs;
     }
 }
