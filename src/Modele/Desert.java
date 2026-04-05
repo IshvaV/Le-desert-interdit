@@ -1,4 +1,6 @@
 package Modele;
+import Vue.Fenetre;
+
 import java.util.Observable;
 import java.util.Observer;
 
@@ -15,7 +17,7 @@ public class Desert extends Observable {
         this.grille = new Grille();
         this.tempete = new Tempete(difficulte);
         this.nbJoueurs = nbJoueurs;
-        this.joueurs = new Joueur[nbJoueurs+1];
+        this.joueurs = new Joueur[nbJoueurs];
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 if (grille.getTuilesTableau()[i][j] instanceof ZoneCrash) {
@@ -28,7 +30,7 @@ public class Desert extends Observable {
 
 
         }
-        joueurAct = 1;
+        joueurAct = 0;
     }
     public void jouer(){
 
@@ -40,14 +42,15 @@ public class Desert extends Observable {
 
         if (joueurs[joueurAct].getActionsDispo() == 0){
             joueurs[joueurAct].actionsTermine();
-            if (joueurAct == nbJoueurs){
-                joueurAct = 1;
-                tempete.tempeteSeDechaine();
+            if (joueurAct == nbJoueurs-1){
+                joueurAct = 0;
+                jouerActionsDuDesert();
+
             }else{
                 if (partieFinit()){
                     while (joueurs[joueurAct] == null){
-                        if (joueurAct == nbJoueurs){
-                            joueurAct = 1;
+                        if (joueurAct == nbJoueurs-1){
+                            joueurAct = 0;
 
                         }
                         joueurAct++;
@@ -73,6 +76,34 @@ public class Desert extends Observable {
         return true;
     }
 
+    public void finDuTour() {
+        Fenetre.vchat.addMessage("Joueur " + (joueurAct+1) + " a fini son tour");
+        joueurAct++;
+        if (joueurAct == nbJoueurs) joueurAct = 0;
+        joueurs[joueurAct].actionsTermine();
+        Fenetre.vchat.addMessage("Joueur " + (joueurAct+1) + " à ton tour");
+
+        notifyObservers();
+
+    }
+    public void jouerActionsDuDesert(){
+        tempete.tempeteSeDechaine();
+        tempete.vagueChaleur(joueurs);
+        tempete.ventSouffle(grille);
+    }
+    public void deplacerJoueur(Tuile tuile){
+        if (tuile.getClass() != OeilTempete.class && joueurs[joueurAct].getActionsDispo() >0){
+
+            int diag1 = Math.abs(tuile.getX() - joueurs[joueurAct].getPosition().getX());
+            int diag2 = Math.abs(tuile.getY() - joueurs[joueurAct].getPosition().getY());
+            if (diag1+diag2 ==1 && tuile.getNbSable() < 2){
+                joueurs[joueurAct].setPosition(tuile);
+                joueurs[joueurAct].moinsUneAction();
+                notifyObservers();
+            }
+        }
+    }
+
     public Grille getGrille() {
         return grille;
     }
@@ -83,5 +114,12 @@ public class Desert extends Observable {
 
     public int getNbJoueurs() {
         return nbJoueurs;
+    }
+    public int getJoueurAct() {
+        return joueurAct;
+    }
+
+    public Tempete getTempete() {
+        return tempete;
     }
 }

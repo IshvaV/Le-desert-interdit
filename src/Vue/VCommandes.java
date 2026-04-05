@@ -8,15 +8,12 @@ import javax.swing.*;
 public class VCommandes extends JPanel {
 
     private Desert desert;
+    private JButton endTurnButton;
+    VCommandes(Desert desert,Controleur controleur) {
 
-    VCommandes(Desert desert) {
-        this.desert = desert;
 
-        JButton button1 = new JButton("Start");
-        this.add(button1);
-
-        Controleur ctrl = new Controleur(desert);
-        button1.addActionListener(ctrl);
-
+        endTurnButton = new JButton("Finir le tour");
+        this.add(endTurnButton); //t
+        endTurnButton.addActionListener(controleur);
     }
 }

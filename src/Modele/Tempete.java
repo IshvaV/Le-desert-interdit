@@ -56,4 +56,7 @@ public class Tempete {
         this.niveau+= 0.5;
         return true;
     }
+    public double getNiveau() {
+        return niveau;
+    }
 }

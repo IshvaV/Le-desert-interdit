@@ -1,5 +1,6 @@
 package Modele;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Joueur {
@@ -11,13 +12,18 @@ public class Joueur {
     private int id;
 
 
+
     public Joueur(Tuile position, int id) {
         this.position = position;
         this.gourde = 5;
         this.actionsDispo = 4;
         this.inventaire = new ArrayList<>();
         this.id = id;
+
+
+
     }
+
 
     public void boire() {
         gourde--;
@@ -74,5 +80,8 @@ public class Joueur {
     public int getNbActions(){
         return actionsDispo;
     }
+
+
+
 
 }

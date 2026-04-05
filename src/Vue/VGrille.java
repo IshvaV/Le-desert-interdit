@@ -53,7 +53,7 @@ public class VGrille extends JPanel implements Observer, MouseListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
+//image
         if (imagebg != null) {
             g.drawImage(imagebg, 0, 0, getWidth(), getHeight(), this);
         } else {
@@ -61,16 +61,41 @@ public class VGrille extends JPanel implements Observer, MouseListener {
             g.fillRect(0, 0, getWidth(), getHeight());
         }
 
-
+//tuiles
         for (int i = 0; i < Grille.X; i++) {
             for (int j = 0; j < Grille.Y; j++) {
-                paint(g, desert.getGrille().getTuilesTableau()[i][j], (i) * TAILLE + getWidth() / 3, (j) * TAILLE + getHeight() / 5);
+                paintTuile(g, desert.getGrille().getTuilesTableau()[i][j], (i) * TAILLE + getWidth() / 3, (j) * TAILLE + getHeight() / 5);
 
             }
         }
-    }
+//players !
+        for (int i = 0; i < desert.getJoueurs().length; i++) {
+            paintPlayers(g, desert.getJoueurs()[i]);
+        }
 
-    public void paint(Graphics g, Tuile tuile, int i, int j) {
+    }
+    public void paintPlayers(Graphics g, Joueur joueur) {
+        if (joueur != null) {
+            int decalage;
+            if(joueur.getId()==0){
+                g.setColor(Color.YELLOW);
+                decalage = 0;
+            }else if (joueur.getId()==1){
+                g.setColor(Color.RED);
+                decalage = 1;
+            }else if (joueur.getId()==2){
+                g.setColor(Color.BLUE);
+                decalage = 2;
+            }else{
+                g.setColor(Color.GREEN);
+                decalage = 3;
+            }
+            g.fillRect(joueur.getPosition().getX()*TAILLE + getWidth()/3 + decalage*10, joueur.getPosition().getY()*TAILLE + getHeight()/5 + decalage*10, 20, 20);
+        }
+
+
+    }
+    public void paintTuile(Graphics g, Tuile tuile, int i, int j) {
         Image tuileImage = tuileImages.get(tuile.getClass());
         Image sable = new ImageIcon(getClass().getResource("/data/Desert_SD.png")).getImage();
         if (tuileImage != null) {
@@ -85,9 +110,9 @@ public class VGrille extends JPanel implements Observer, MouseListener {
         }
     }
 
-    public void VExplore() {
-
-    }
+//    public void VExplore() {
+//
+//    }
 
     @Override
     public void mouseClicked(MouseEvent e) {

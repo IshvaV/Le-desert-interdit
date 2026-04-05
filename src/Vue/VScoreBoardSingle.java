@@ -1,8 +1,10 @@
 package Vue;
 
+import Controleur.Controleur;
 import Modele.Joueur;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class VScoreBoardSingle extends JPanel {
 
@@ -12,30 +14,57 @@ public class VScoreBoardSingle extends JPanel {
     private JLabel actionLabel;
     private JLabel gourdeLabel;
 
-    private JButton endTurnButton;
+    //private JButton endTurnButton;
     public VScoreBoardSingle(Joueur joueur) {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         this.setBorder(BorderFactory.createLineBorder(java.awt.Color.BLACK));
 
 
-        title = new JLabel("Joueur " + (joueur.getId()+1) );
-        title.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 20));
-        this.add(title);
-        this.add(Box.createVerticalStrut(10)); // Add some space
+        JLabel titre = new JLabel("Joueur " + (joueur.getId() + 1));
+        titre.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 20));
 
-        actionLabel = new JLabel("Actions restantes : " + joueur.getNbActions());
-        this.add(actionLabel);
-        this.add(Box.createVerticalStrut(5));
+        // Petit indicateur coloré
+        JPanel colorIcon = new JPanel();
+        Color[] colors = {Color.YELLOW, Color.RED, Color.BLUE, Color.GREEN};
+        colorIcon.setBackground(colors[joueur.getId()]);
+        colorIcon.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        colorIcon.setPreferredSize(new Dimension(20, 20));
 
-        gourdeLabel = new JLabel("Gourdes restantes : " + joueur.getGourde());
-        this.add(gourdeLabel);
 
-        // Add a button to end the turn
-        endTurnButton = new JButton("Finir le tour");
-        this.add(endTurnButton); //t
-        endTurnButton.addActionListener(e -> Fenetre.vchat.addMessage("Le joueur " + (joueur.getId() + 1) + " a fini son tour."));
+        JPanel titleBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
+        titleBar.add(colorIcon);
+        titleBar.add(titre);
+        titleBar.setAlignmentY(Component.TOP_ALIGNMENT);
 
+
+        this.actionLabel = new JLabel("Actions restantes : " + joueur.getNbActions());
+        this.gourdeLabel = new JLabel("Gourdes restantes : " + joueur.getGourde());
+
+
+        this.add(titleBar);
+
+
+
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+        infoPanel.add(this.actionLabel);
+        infoPanel.add(Box.createVerticalStrut(3));
+        infoPanel.add(this.gourdeLabel);
+        infoPanel.setAlignmentY(Component.TOP_ALIGNMENT);
+
+        // Assembler
+        this.add(infoPanel);
+
+
+
+
+
+
+//
+//        endTurnButton = new JButton("Finir le tour");
+//        this.add(endTurnButton); //t
+//        endTurnButton.addActionListener(controleur);
 
     }
 
