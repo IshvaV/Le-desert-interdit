@@ -59,8 +59,14 @@ public abstract class Tuile {
         explored = true;
     }
 
-    public void setPiece(Piece piece) {
-        this.piece = piece;
+    public boolean aUnePiece() {
+        return piece != null;
+    }
+
+    public void prendrePiece() {
+        if (piece != null) {
+            piece = null;
+        }
     }
 
 }

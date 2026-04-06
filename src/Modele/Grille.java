@@ -7,12 +7,16 @@ import java.util.Random;
 public class Grille {
     public static final int X = 5, Y = 5;
     private Tuile[][] tuilesTableau;
+    private int oeilX, oeilY;
 
     Grille() {
         ArrayList<Integer> tirage = new ArrayList<>(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24));
         ArrayList<String> losange = new ArrayList<>(Arrays.asList("0,2", "1,1", "2,0", "3,1", "4,2", "3,3", "2,4", "1,3"));
 
         tuilesTableau = new Tuile[X][Y];
+
+        oeilX = 2;
+        oeilY = 2;
 
         Random r = new Random();
 
@@ -23,7 +27,7 @@ public class Grille {
                 int tuile = tirage.get(r.nextInt(tirage.size()));
 
                 if (i == 2 && j == 2) {
-                    tuilesTableau[i][j] = new OeilTempete(i, j);
+                    tuilesTableau[oeilX][oeilY] = new OeilTempete(i, j);
                 } else {
                     tirage.remove(Integer.valueOf(tuile));
                     switch (tuile) {
@@ -98,21 +102,7 @@ public class Grille {
     }
 
     public void deplacerTuiles(Direction vent, int f) {
-        int ox = -1, oy = -1;
-
-        boolean trouve = false;
-        for (Tuile[] t : tuilesTableau) {
-            for (Tuile tuile : t) {
-                if (tuile instanceof OeilTempete) {
-                    ox = tuile.getX();
-                    oy = tuile.getY();
-                    trouve = true;
-                    break;
-                }
-            }
-            if (trouve) break;
-        }
-
+        int ox = oeilX, oy = oeilY;
         for (int k = 0; k < f; k++) {
             switch (vent) {
                 case NORD -> {
@@ -162,12 +152,14 @@ public class Grille {
                         ox++;
                         tuilesTableau[ox][oy].setX(ox);
                         tuilesTableau[ox][oy].setY(oy);
-                        tuilesTableau[ox + 1][oy].setX(ox + 1);
-                        tuilesTableau[ox + 1][oy].setY(oy);
-                        tuilesTableau[ox + 1][oy].ajouterSable();
+                        tuilesTableau[ox - 1][oy].setX(ox - 1);
+                        tuilesTableau[ox - 1][oy].setY(oy);
+                        tuilesTableau[ox - 1][oy].ajouterSable();
                     }
                 }
             }
         }
+        this.oeilX = ox;
+        this.oeilY = oy;
     }
 }

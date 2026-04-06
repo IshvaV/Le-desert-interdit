@@ -42,13 +42,13 @@ public class Fenetre {
         this.scoreboardall = new VScoreboardALL(desert.getNbJoueurs());
 
         for (int i = 0; i < desert.getNbJoueurs(); i++) {
-            scoreboard[i] = new VScoreBoardSingle(desert.getJoueurs()[i]);
+            scoreboard[i] = new VScoreBoardSingle(desert,desert.getJoueurs()[i]);
             scoreboardall.add(scoreboard[i]);
         }
 
 
         MainPanel.add(vgrille, BorderLayout.CENTER);
-        vchat = new VChat();
+        vchat = new VChat(desert);
 
         bottomPanel.add(vchat, BorderLayout.SOUTH);
 

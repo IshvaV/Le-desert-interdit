@@ -1,28 +1,36 @@
 package Vue;
 
 import Controleur.Controleur;
+import Modele.Desert;
 import Modele.Joueur;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Observable;
+import java.util.Observer;
 
-public class VScoreBoardSingle extends JPanel {
+public class VScoreBoardSingle extends JPanel implements Observer {
 
     private JLabel title;
+    private Joueur joueur;
 
 
     private JLabel actionLabel;
     private JLabel gourdeLabel;
 
     //private JButton endTurnButton;
-    public VScoreBoardSingle(Joueur joueur) {
+    public VScoreBoardSingle(Desert desert, Joueur joueur) {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         this.setBorder(BorderFactory.createLineBorder(java.awt.Color.BLACK));
 
+        desert.addObserver(this);
+
 
         JLabel titre = new JLabel("Joueur " + (joueur.getId() + 1));
         titre.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 20));
+
+        this.joueur = joueur;
 
         // Petit indicateur coloré
         JPanel colorIcon = new JPanel();
@@ -66,6 +74,13 @@ public class VScoreBoardSingle extends JPanel {
 //        this.add(endTurnButton); //t
 //        endTurnButton.addActionListener(controleur);
 
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        Desert desert = (Desert) o; // On récupère le modèle pour suivre son nouvel état
+        this.actionLabel.setText("Actions restantes : " + joueur.getNbActions());
+        this.gourdeLabel.setText("Gourdes restantes : " + joueur.getGourde());
     }
 
 
