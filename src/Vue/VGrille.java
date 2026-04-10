@@ -141,8 +141,11 @@ public class VGrille extends JPanel implements Observer, MouseListener {
 
             if (i >= 0 && i < Grille.X && j >= 0 && j < Grille.Y) {
                 Tuile tuileCliquee = desert.getGrille().getTuilesTableau()[i][j];
-                desert.deplacerJoueur(tuileCliquee);
-                System.out.println("Tuile cliquée en (" + i + ", " + j + ") : " + tuileCliquee.getClass().getSimpleName());
+                if (desert.getModeActuel() == ModeAction.DEPLACEMENT) {
+                    desert.deplacerJoueur(tuileCliquee);
+                } else if (desert.getModeActuel() == ModeAction.CREUSER) {
+                    desert.creuser(tuileCliquee);
+                }
 
             }
         }

@@ -1,3 +1,8 @@
 package Modele;
 
-public enum ModeAction { }
+public enum ModeAction {
+    DEPLACEMENT,
+    CREUSER,
+    EXPLORER,
+    RAMASSER
+}

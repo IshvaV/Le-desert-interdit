@@ -14,6 +14,7 @@ public class Desert extends Observable {
     private PisteDecollage pd;
     private boolean partieTerminee = false;
     private int nbPiecesTrouvees = 0; // Compteur de pièces
+    private ModeAction modeActuel = ModeAction.DEPLACEMENT;
 
 
     public Desert(Difficulte difficulte, int nbJoueurs) {
@@ -38,8 +39,17 @@ public class Desert extends Observable {
         joueurAct = 0;
     }
 
-    public void actualiserEtatJeu() {
+    public void setModeActuel(ModeAction mode) {
+        this.modeActuel = mode;
+        setChanged();
+        notifyObservers("Mode : " + mode.name());
+    }
 
+    public ModeAction getModeActuel() {
+        return modeActuel;
+    }
+
+    public void actualiserEtatJeu() {
         if (partieTerminee) return;
 
         // 1. Vérification immédiate de la défaite (Mort de soif)
@@ -219,15 +229,27 @@ public class Desert extends Observable {
         Tuile t = j.getPosition();
 
         // On vérifie si la tuile est explorée et contient une pièce disponible
-        if (j.getNbActions() > 0 && t.isExplored() && t.aUnePiece()) {
+        if (j.getNbActions() <= 0) {
+            setChanged();
+            notifyObservers("Pas assez d'actions pour ramasser");
+            return;
+        }
+        if (!t.isExplored()) {
+            setChanged();
+            notifyObservers("Il faut d'abord explorer la case");
+            return;
+        }
+        if (t.aUnePiece()) {
             t.prendrePiece(); // Enlève la pièce de la tuile
             this.nbPiecesTrouvees++;
             j.moinsUneAction();
-
             setChanged();
             notifyObservers("Pièce récupérée ! Plus que " + (4 - nbPiecesTrouvees) + ".");
-            actualiserEtatJeu();
+        }else{
+            setChanged();
+            notifyObservers("Pas de pièce ici !");
         }
+        actualiserEtatJeu();
     }
 
     public Grille getGrille() {
