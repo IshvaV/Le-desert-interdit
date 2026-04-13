@@ -1,6 +1,7 @@
 package Controleur;
 
 import Modele.Desert;
+import Modele.ModeAction;
 import Vue.VGrille;
 
 import javax.swing.*;
@@ -20,9 +21,33 @@ public class Controleur implements ActionListener {
 
         if (source instanceof JButton) {
             JButton btn = (JButton) source;
-            if (btn.getText().equals("Finir le tour")) {
-                desert.finDuTour();
-            }
+            String text = btn.getText();
+            switch(text) {
+                case "Finir le tour":
+                    desert.finDuTour();
+                    break;
+                case "Se déplacer":
+                    desert.setModeActuel(ModeAction.DEPLACEMENT);
+                    break;
+                case "Creuser":
+                    desert.setModeActuel(ModeAction.CREUSER);
+                    break;
+                case "Explorer":
+                    desert.explorer();
+                    break;
+                case "Ramasser":
+                    desert.ramasserPiece();
+                    break;
+                case "Donner de l'eau":
+                    desert.setModeActuel(ModeAction.DONNER_EAU);
+                    break;
+                case "Puiser":
+                    desert.puiserEau();
+                    break;
+                case "Déplacer collègue":
+                    desert.setModeActuel(ModeAction.NAVIGATE_CIBLE);
+                    break;
+                }
         }
 
     }

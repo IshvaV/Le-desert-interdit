@@ -31,13 +31,12 @@ public abstract class Tuile {
         return y;
     }
 
-    public int setX(int x) {
-        return this.x = x;
+    public void setPiece(Piece piece) {
+        this.piece = piece;
     }
 
-    public int setY(int y) {
-        return this.y = y;
-    }
+    public void setX(int x) { this.x  = x;}
+    public void setY(int y) { this.y  = y;}
 
     public void enleverSable() {
         if (this.nbSable > 0) this.nbSable--;

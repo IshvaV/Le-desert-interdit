@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class Joueur {
 
     private Tuile position;
+    private Role role;
     private int gourde;
     private int actionsDispo;
     private ArrayList<Piece> inventaire;
@@ -13,9 +14,10 @@ public class Joueur {
 
 
 
-    public Joueur(Tuile position, int id) {
+    public Joueur(Tuile position, int id, Role role) {
         this.position = position;
-        this.gourde = 5;
+        this.role = role;
+        this.gourde = role.getMaxGourde();
         this.actionsDispo = 4;
         this.inventaire = new ArrayList<>();
         this.id = id;
@@ -24,18 +26,13 @@ public class Joueur {
 
     }
 
-
-    public void boire() {
-        gourde--;
-    }
-
-    public boolean estMort(){
-        return gourde <= 0;
-    }
+    // Getters
 
     public Tuile getPosition() {
         return position;
     }
+
+    public Role getRole() { return role;}
 
     public int getGourde() {
         return gourde;
@@ -49,39 +46,29 @@ public class Joueur {
         return inventaire;
     }
 
-    public void setPosition(Tuile position) {
-        this.position = position;
-    }
+    public int getId() { return id;}
 
-    public void moinsUneAction(){
-        actionsDispo--;
-    }
 
-    public void actionsTermine(){
-        actionsDispo = 4;
-    }
+    // Méthodes utiles
 
-    public void remplirGourde() {
-        gourde = Math.min(gourde + 2, 5);
-    }
+    public void setPosition(Tuile position) { this.position = position; }
 
     public void ajouterPiece(Piece piece) {
         inventaire.add(piece);
     }
 
-    public boolean aPiece(Piece piece) {
-        return inventaire.contains(piece);
-    }
+    public void moinsUneAction(){ actionsDispo--; }
 
-    public int getId() {
-        return id;
-    }
+    public void actionsTermine(){ actionsDispo = 4; }
 
-    public int getNbActions(){
-        return actionsDispo;
-    }
+    public void boire() { if (gourde > 0) gourde--; }
 
+    public void remplirGourde(int portion) { gourde = Math.min(gourde + portion, role.getMaxGourde()); }
 
+    //Vérifications
 
+    public boolean aPiece(Piece piece) { return inventaire.contains(piece);}
+
+    public boolean estMort(){ return gourde <= 0; }
 
 }

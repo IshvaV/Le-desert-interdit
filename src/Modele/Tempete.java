@@ -27,14 +27,14 @@ public class Tempete {
         }
     }
 
-    public void ventSouffle(Grille g) {
+    public void ventSouffle(Desert desert) {
         Random random = new Random();
         int force = random.nextInt(3) + 1;
         Direction[] directions = Direction.values();
         int indexAleatoire = random.nextInt(directions.length);
         Direction directionAleatoire = directions[indexAleatoire];
 
-        g.deplacerTuiles(directionAleatoire, force);
+        desert.getGrille().deplacerTuiles(directionAleatoire, force, desert);
     }
 
     public void vagueChaleur(Joueur[] joueurs) {

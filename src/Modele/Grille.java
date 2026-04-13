@@ -101,7 +101,7 @@ public class Grille {
         return tuilesTableau;
     }
 
-    public void deplacerTuiles(Direction vent, int f) {
+    public void deplacerTuiles(Direction vent, int f, Desert desert) {
         int ox = oeilX, oy = oeilY;
         for (int k = 0; k < f; k++) {
             switch (vent) {
@@ -115,7 +115,7 @@ public class Grille {
                         tuilesTableau[ox][oy].setY(oy);
                         tuilesTableau[ox][oy + 1].setX(ox);
                         tuilesTableau[ox][oy + 1].setY(oy + 1);
-                        tuilesTableau[ox][oy + 1].ajouterSable();
+                        desert.poserSable(tuilesTableau[ox][oy + 1]);
                     }
                 }
                 case SUD -> {
@@ -128,7 +128,7 @@ public class Grille {
                         tuilesTableau[ox][oy].setY(oy);
                         tuilesTableau[ox][oy - 1].setX(ox);
                         tuilesTableau[ox][oy - 1].setY(oy - 1);
-                        tuilesTableau[ox][oy - 1].ajouterSable();
+                        desert.poserSable(tuilesTableau[ox][oy - 1]);
                     }
                 }
                 case OUEST -> {
@@ -141,7 +141,7 @@ public class Grille {
                         tuilesTableau[ox][oy].setY(oy);
                         tuilesTableau[ox + 1][oy].setX(ox + 1);
                         tuilesTableau[ox + 1][oy].setY(oy);
-                        tuilesTableau[ox + 1][oy].ajouterSable();
+                        desert.poserSable(tuilesTableau[ox + 1][oy]);
                     }
                 }
                 case EST -> {
@@ -154,7 +154,7 @@ public class Grille {
                         tuilesTableau[ox][oy].setY(oy);
                         tuilesTableau[ox - 1][oy].setX(ox - 1);
                         tuilesTableau[ox - 1][oy].setY(oy);
-                        tuilesTableau[ox - 1][oy].ajouterSable();
+                        desert.poserSable(tuilesTableau[ox - 1][oy]);
                     }
                 }
             }

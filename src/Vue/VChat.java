@@ -19,8 +19,10 @@ public class VChat extends JScrollPane implements Observer {
         this.chatArea = new JTextArea();
         this.chatArea.setEditable(false); // Make chat area read-only
         this.chatArea.setLineWrap(true); // Enable line wrapping
+        this.chatArea.setBackground(new Color(255, 248, 220)); // Fond sable clair
         this.setViewportView(this.chatArea);
         this.setPreferredSize(new Dimension(300, 150)); // Set a preferred size for the chat panel
+        this.setBorder(BorderFactory.createTitledBorder("Journal de Bord"));
 
         desert.addObserver(this);
     }

@@ -10,33 +10,33 @@ import java.util.Observer;
 
 public class VGameStatus extends JPanel implements Observer {
 
+    private JLabel playerStatus;
+    private JLabel actionStatus;
+    private JLabel tempeteStatus;
 
     public VGameStatus(Desert desert) {
-        JLabel playerStatus = new JLabel("Player Status : Joueur " + (desert.getJoueurs()[desert.getJoueurAct()].getId()+1));
+        this.setBackground(new Color(244, 164, 96));
+        this.setBorder(BorderFactory.createTitledBorder("Statut"));
+        
+        Joueur j = desert.getJoueurs()[desert.getJoueurAct()];
+        playerStatus = new JLabel("Joueur " + (j.getId() + 1) + " (" + j.getRole().getNom() + ")");
+        actionStatus = new JLabel(" | Actions : " + j.getActionsDispo());
+        tempeteStatus = new JLabel(" | Tempête : " + desert.getTempete().getNiveau());
 
-
-
-        JLabel tempeteStatus = new JLabel("Tempête Niveau : " + desert.getTempete().getNiveau());
         this.add(playerStatus);
+        this.add(actionStatus);
         this.add(tempeteStatus);
 
         desert.addObserver(this);
-
-
-        //  JLabel JoueurRestant = new JLabel("Joueur Restant : " + desert.getNbJoueurs());
-
     }
 
 
     @Override
     public void update(Observable observable, Object arg) {
             Desert desert = (Desert) observable;
-            this.removeAll();
-            JLabel playerStatus = new JLabel("Player Status : Joueur " + (desert.getJoueurs()[desert.getJoueurAct()].getId()+1));
-            JLabel tempeteStatus = new JLabel("Tempête Niveau : " + desert.getTempete().getNiveau());
-            this.add(playerStatus);
-            this.add(tempeteStatus);
-            this.revalidate();
-            this.repaint();
+            Joueur j = desert.getJoueurs()[desert.getJoueurAct()];
+            playerStatus.setText("Joueur " + (j.getId() + 1) + " (" + j.getRole().getNom() + ")");
+            actionStatus.setText(" | Actions : " + j.getActionsDispo());
+            tempeteStatus.setText(" | Tempête : " + desert.getTempete().getNiveau());
     }
 }

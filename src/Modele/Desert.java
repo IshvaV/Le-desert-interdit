@@ -1,8 +1,6 @@
 package Modele;
 
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Random;
+import java.util.*;
 
 public class Desert extends Observable {
     private Grille grille;
@@ -15,6 +13,8 @@ public class Desert extends Observable {
     private boolean partieTerminee = false;
     private int nbPiecesTrouvees = 0; // Compteur de pièces
     private ModeAction modeActuel = ModeAction.DEPLACEMENT;
+    private int reserveSable = 48;
+    private Joueur cibleNavigation;
 
 
     public Desert(Difficulte difficulte, int nbJoueurs) {
@@ -22,6 +22,11 @@ public class Desert extends Observable {
         this.tempete = new Tempete(difficulte);
         this.nbJoueurs = nbJoueurs;
         this.joueurs = new Joueur[nbJoueurs];
+
+        //Roles aléatoires
+        ArrayList<Role> rolesDispo = new ArrayList<>(Arrays.asList(Role.values()));
+        Collections.shuffle(rolesDispo);
+
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 if (grille.getTuilesTableau()[i][j] instanceof ZoneCrash) {
@@ -32,12 +37,16 @@ public class Desert extends Observable {
             }
         }
         for (int k = 0; k < nbJoueurs; k++){
-            joueurs[k] = new Joueur(zc, k);
-
-
+            Role roleInit = rolesDispo.get(k);
+            joueurs[k] = new Joueur(zc, k, roleInit);
+            setChanged();
+            notifyObservers("Joueur " + (k + 1) + " est : " + roleInit.getNom());
         }
+
         joueurAct = 0;
     }
+
+    // Getters
 
     public void setModeActuel(ModeAction mode) {
         this.modeActuel = mode;
@@ -48,6 +57,8 @@ public class Desert extends Observable {
     public ModeAction getModeActuel() {
         return modeActuel;
     }
+
+    // Méthodes
 
     public void actualiserEtatJeu() {
         if (partieTerminee) return;
@@ -128,49 +139,72 @@ public class Desert extends Observable {
 
     public void jouerActionsDuDesert() {
         Random random = new Random();
-        ActionDesert[] actions = ActionDesert.values();
-        int indexAleatoire = random.nextInt(actions.length);
-        ActionDesert act = actions[indexAleatoire];
+        int tirage = random.nextInt(100); // Tirage entre 0 et 99
 
-        //On prépare le changement pour le message du chat
         setChanged();
 
-        switch (act) {
-            case TEMPETE_DECHAINE:
-                tempete.tempeteSeDechaine();
-                notifyObservers("La tempête de déchaîne !");
-                break;
-            case VAGUE_CHALEUR:
-                tempete.vagueChaleur(joueurs);
-                notifyObservers("Une vague de chaleur frappe les joueurs !");
-                break;
-            case VENT_SOUFFLE:
-                tempete.ventSouffle(grille);
-                notifyObservers("Le vent souffle et déplace les tuiles !");
-                break;
+        if (tirage < 10) {
+            // 10% : Tempête se déchaîne
+            tempete.tempeteSeDechaine();
+            notifyObservers("La tempête se déchaîne !");
+        } else if (tirage < 30) {
+            // 20% : Vague de chaleur (10 à 29)
+            tempete.vagueChaleur(joueurs);
+            notifyObservers("Une vague de chaleur frappe les joueurs !");
+        } else {
+            // 70% : Le vent souffle (30 à 99)
+            tempete.ventSouffle(this);
+            notifyObservers("Le vent souffle et déplace les tuiles !");
         }
-        // Cette méthode vérifie la mort ET rafraîchit toute la vue (notify)
         actualiserEtatJeu();
     }
 
     public void deplacerJoueur(Tuile tuile){
         if (partieTerminee) return;
         Joueur j = joueurs[joueurAct];
-        // On ne peut pas aller sur l'oeil, et il faut des actions
-        if (!(tuile instanceof OeilTempete) && j.getNbActions() > 0){
 
-            // Distance = 1 pour se déplacer (adjacentes)
-            int dist = Math.abs(tuile.getX() - j.getPosition().getX()) +
-                    Math.abs(tuile.getY() - j.getPosition().getY());
+        if (j.getActionsDispo() <= 0) {
+            setChanged();
+            notifyObservers("Pas assez d'actions pour se déplacer");
+            return;
+        }
 
-            // Déplacement normal (distance 1) ou entre Tunnels explorés
-            boolean tunnelMove = (j.getPosition() instanceof Tunnel t1 && tuile instanceof Tunnel t2
-                    && t1.isExplored() && t2.isExplored());
+        if (tuile instanceof OeilTempete) {
+            setChanged();
+            notifyObservers("L'Oeil de la tempête est infranchissable !");
+            return;
+        }
 
-            if ((dist == 1 || tunnelMove) && tuile.getNbSable() < 2){
+        // Écarts de distance
+        int dx = Math.abs(j.getPosition().getX() - tuile.getX());
+        int dy = Math.abs(j.getPosition().getY() -tuile.getY());
+
+        // Vérifications des distances
+        boolean distanceOk = (dx + dy == 1);
+        if (j.getRole() == Role.EXPLORATEUR && dx == 1 && dy == 1) {
+            distanceOk = true;      //On autorise la diagonale pour l'explorateur
+        }
+
+        // Déplacement tunnels explorés
+        boolean tunnelMove = (j.getPosition() instanceof Tunnel t1 && tuile instanceof Tunnel t2
+                && t1.isExplored() && t2.isExplored());
+
+        if (distanceOk || tunnelMove){
+            // On vérifie le sable
+            boolean estBloqueParSable = (j.getPosition().getNbSable() >= 2 || tuile.getNbSable() >= 2);
+
+            if (j.getRole() == Role.GRIMPEUR || !estBloqueParSable) {
                 j.setPosition(tuile);
                 j.moinsUneAction();
+                setChanged();
+                notifyObservers("Joueur " + (j.getId() + 1) + " se déplace.");
+            } else{
+                setChanged();
+                notifyObservers("Tuile bloquée par le sable !");
             }
+        } else if (dx != 0 || dy != 0) {
+            setChanged();
+            notifyObservers("Trop loin pour se déplacer");
         }
         actualiserEtatJeu();
     }
@@ -178,15 +212,33 @@ public class Desert extends Observable {
     public void creuser(Tuile tuile) {
         if (partieTerminee) return;
         Joueur j = joueurs[joueurAct];
-        int dist = Math.abs(tuile.getX() - j.getPosition().getX()) +
-                Math.abs(tuile.getY() - j.getPosition().getY());
 
-        if (j.getNbActions() > 0 && (dist == 0 || dist == 1) && tuile.getNbSable() > 0) {
+        // Écarts de distance
+        int dx = Math.abs(j.getPosition().getX() - tuile.getX());
+        int dy = Math.abs(j.getPosition().getY() -tuile.getY());
+
+        // Distance autorisée pour creuser : 0 (soi-même), 1 (adjacente, ou diagonale pour l'explorateur)
+        boolean peutCreuser = (dx + dy <= 1);
+        if (j.getRole() == Role.EXPLORATEUR && dx == 1 && dy == 1) {
+            peutCreuser = true;
+        }
+
+        if (j.getActionsDispo() > 0 && peutCreuser && tuile.getNbSable() > 0) {
             tuile.enleverSable();
-            j.moinsUneAction();
 
+            // Archéologue peut creuser de nouveau
+            if (j.getRole() == Role.ARCHEOLOGUE && tuile.getNbSable() > 0){
+                tuile.enleverSable();
+                setChanged();
+                notifyObservers("L'Archéologue creuse 2 tonnes de sables !");
+            }else{
+                setChanged();
+                notifyObservers("Sable retiré !"); // Message pour le chat
+            }
+            j.moinsUneAction();
+        } else if (j.getActionsDispo() > 0 && peutCreuser && tuile.getNbSable() == 0) {
             setChanged();
-            notifyObservers("Sable retiré !"); // Message pour le chat
+            notifyObservers("Pas de sable ici !");
         }
         actualiserEtatJeu();
     }
@@ -197,29 +249,76 @@ public class Desert extends Observable {
         Joueur j = joueurs[joueurAct];
         Tuile t = j.getPosition();
 
-        if (j.getNbActions() > 0 && t.getNbSable() == 0 && !t.isExplored()) {
-            t.explore();
-            j.moinsUneAction();
-
+        if (j.getActionsDispo() <= 0) {
             setChanged();
-            if (t instanceof Oasis oasis) {
-                if (!oasis.isEstMirage()) {
-                    // Règle : tous les joueurs sur la case boivent
-                    for (Joueur p : joueurs) {
-                        if (p != null && p.getPosition() == t) p.remplirGourde();
-                    }
-                    setChanged();
-                    notifyObservers("Oasis trouvée ! Tout le monde boit.");
-                } else {
-                    setChanged();
-                    notifyObservers("C'était un mirage...");
+            notifyObservers("Pas assez d'actions !");
+            return;
+        }
+
+        if (t.getNbSable() > 0) {
+            setChanged();
+            notifyObservers("Retirez d'abord le sable pour explorer !");
+            return;
+        }
+
+        if (t.isExplored()) {
+            setChanged();
+            notifyObservers("Déjà exploré");
+            return;
+        }
+
+        //Action réussie
+        t.explore();
+        j.moinsUneAction();
+
+        setChanged();
+        if (t instanceof Oasis oasis) {
+            if (!oasis.isEstMirage()) {
+                // Règle : tous les joueurs sur la case boivent
+                for (Joueur p : joueurs) {
+                    if (p != null && p.getPosition() == t) p.remplirGourde(2);
                 }
+                notifyObservers("Oasis trouvée ! Tout le monde boit.");
             } else {
-                setChanged();
-                notifyObservers("Case explorée : " + t.getClass().getSimpleName());
+                notifyObservers("C'était un mirage...");
             }
+        } else if (t instanceof Tunnel) {
+            notifyObservers("Tunnel découvert !");
+        } else if (t instanceof TuileIndice indice) {
+            notifyObservers("Indice trouvé pour : " + indice.getTypePiece());
+            verifierIntersection(indice.getTypePiece());
+        } else {
+            notifyObservers("Case explorée : " + t.getClass().getSimpleName());
         }
         actualiserEtatJeu();
+    }
+
+    public void verifierIntersection(TypePiece type) {
+        TuileIndice indiceLigne = null;
+        TuileIndice indiceColonne = null;
+
+        for (int i = 0; i < Grille.X; i++) {
+            for (int j = 0; j < Grille.Y; j++ ) {
+                Tuile t = grille.getTuilesTableau()[i][j];
+                if (t instanceof TuileIndice ti && ti.getTypePiece() == type) {
+                    if (ti.isEstLigne()) indiceLigne = ti;
+                    else indiceColonne = ti;
+                }
+            }
+        }
+
+        if (indiceLigne != null && indiceLigne.isExplored() && indiceColonne != null && indiceColonne.isExplored()) {
+            int targetX = indiceColonne.getX();
+            int targetY = indiceLigne.getY();
+
+            Tuile cible = grille.getTuilesTableau()[targetX][targetY];
+
+            if (cible.getPiece() == null) {
+                cible.setPiece(new Piece(type));
+                setChanged();
+                notifyObservers("Pièce localisée : " + type + " est en (" + targetX + ", " + targetY + ") !");
+            }
+        }
     }
 
     public void ramasserPiece() {
@@ -229,7 +328,7 @@ public class Desert extends Observable {
         Tuile t = j.getPosition();
 
         // On vérifie si la tuile est explorée et contient une pièce disponible
-        if (j.getNbActions() <= 0) {
+        if (j.getActionsDispo() <= 0) {
             setChanged();
             notifyObservers("Pas assez d'actions pour ramasser");
             return;
@@ -250,6 +349,119 @@ public class Desert extends Observable {
             notifyObservers("Pas de pièce ici !");
         }
         actualiserEtatJeu();
+    }
+
+    public void donnerEau(Joueur cible) {
+        if (partieTerminee) return;
+        Joueur j = joueurs[joueurAct];
+
+        if (j.getRole() != Role.PORTEUR_D_EAU) {
+            setChanged();
+            notifyObservers("Seul le porteur d'eau peut donner de l'eau !");
+            return;
+        }
+
+        if (j.getGourde() <= 0) {
+            setChanged();
+            notifyObservers("Votre gourde est vide !");
+            return;
+        }
+
+        if (cible == j){
+            setChanged();
+            notifyObservers("Vous ne pouvez pas donner d'eau à vous même !");
+            return;
+        }
+
+        if (cible.getGourde() >= cible.getRole().getMaxGourde()) {
+            setChanged();
+            notifyObservers("La gourde de ce joueur est déjà pleine !");
+            return;
+        }
+
+        // Le porteur d'eau peut donner en vertical, horizontal et en diagonale (distance 1)
+        int dx = Math.abs(j.getPosition().getX() - cible.getPosition().getX());
+        int dy = Math.abs(j.getPosition().getY() - cible.getPosition().getY());
+
+        if (dx <= 1 && dy <= 1) {
+            j.boire();
+            cible.remplirGourde(1);
+            setChanged();
+            notifyObservers("Le Porteur d'eau a donné une dose à Joueur " + (cible.getId() + 1));
+        } else {
+            setChanged();
+            notifyObservers("Ce joueur est trop loin !");
+        }
+        actualiserEtatJeu();
+    }
+
+    public void puiserEau() {
+        if (partieTerminee) return;
+        Joueur j = joueurs[joueurAct];
+
+        if (j.getRole() != Role.PORTEUR_D_EAU) {
+            setChanged();
+            notifyObservers("Seul le Porteur d'eau peut puiser dans les oasis !");
+            return;
+        }
+
+        if (j.getActionsDispo() <= 0) {
+            setChanged();
+            notifyObservers("Pas assez d'actions");
+            return;
+        }
+
+        Tuile t = j.getPosition();
+        if (t instanceof Oasis oasis && t.isExplored() && !oasis.isEstMirage()) {
+            j.remplirGourde(2);
+            j.moinsUneAction();
+            setChanged();
+            notifyObservers("Le Porteur d'eau a puisé 2 doses d'eau.");
+        }else {
+            setChanged();
+            notifyObservers("Vous ne pouvez pas puiser ici");
+        }
+        actualiserEtatJeu();
+    }
+
+    public void selectionnerCible(Joueur cible) {
+        if (joueurs[joueurAct].getRole() != Role.NAVIGATEUR) return;
+        this.cibleNavigation = cible;
+        this.modeActuel = ModeAction.NAVIGATE_DEST;
+        setChanged();
+        notifyObservers("Cliquez sur la destination !");
+    }
+
+    public void naviguer(Tuile dest) {
+        Joueur j = joueurs[joueurAct];
+        if (cibleNavigation != null && j.getActionsDispo() > 0) {
+            int dx = Math.abs(cibleNavigation.getPosition().getX() - dest.getX());
+            int dy = Math.abs(cibleNavigation.getPosition().getY() - dest.getY());
+
+            if (dx + dy == 1) {
+                cibleNavigation.setPosition(dest);
+                j.moinsUneAction();
+                this.modeActuel = ModeAction.DEPLACEMENT;
+                setChanged();
+                notifyObservers("Déplacement effectué.");
+            } else {
+                setChanged();
+                notifyObservers("Trop loin !");
+            }
+        }
+        actualiserEtatJeu();
+    }
+
+    public boolean poserSable(Tuile t) {
+        if (reserveSable <= 0) {
+            partieTerminee = true;
+            setChanged();
+            notifyObservers("DÉFAITE : plus de sable disponible");
+            return false;
+        }
+        t.ajouterSable();
+        reserveSable--;
+        return true;
     }
 
     public Grille getGrille() {
