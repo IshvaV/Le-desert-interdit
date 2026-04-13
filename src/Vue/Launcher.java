@@ -63,50 +63,32 @@ public class Launcher implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Difficulte difficulte;
-        int joueur;
-        switch (buttonDifficulty.getSelectedIndex()) {
-            case 1:
-                difficulte = Difficulte.NOVICE;
-                break;
-            case 2:
-                difficulte = Difficulte.NORMAL;
-                break;
-            case 3:
-                difficulte = Difficulte.ELITE;
-                break;
-            case 4:
-                difficulte = Difficulte.LEGENDAIRE;
-                break;
-            default:
-                difficulte = Difficulte.NOVICE;
-        }
-        switch (buttonJoueur.getSelectedIndex()) {
-            case 1:
-                joueur = 1;
-                break;
-            case 2:
-                joueur = 2;
-                break;
-            case 3:
-                joueur = 3;
-                break;
-            case 4:
-                joueur = 4;
-                break;
-            default:
-                joueur = 1;
-        }
-
-
-
         if (e.getSource() == buttonStart) {
+            Difficulte difficulte;
+            int joueur;
+
+            // Gestion de la difficulté (Défaut : NORMAL)
+            switch (buttonDifficulty.getSelectedIndex()) {
+                case 1:  difficulte = Difficulte.NOVICE; break;
+                case 3:  difficulte = Difficulte.ELITE; break;
+                case 4:  difficulte = Difficulte.LEGENDAIRE; break;
+                case 2:
+                default: difficulte = Difficulte.NORMAL; break;
+            }
+
+            // Gestion du nombre de joueurs (Défaut : 2)
+            switch (buttonJoueur.getSelectedIndex()) {
+                case 1:  joueur = 1; break;
+                case 3:  joueur = 3; break;
+                case 4:  joueur = 4; break;
+                case 2:
+                default: joueur = 2; break;
+            }
+
             modele = new Desert(difficulte, joueur);
             new Fenetre(modele);
             this.frame.dispose();
         }
-
-
     }
     public JButton setButton(String Name, int x, int y) {
         JButton button = new JButton( Name);
