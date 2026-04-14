@@ -1,10 +1,12 @@
-# Le Désert Interdit - Java Edition
+# Le Désert Interdit - Java
 
 Une adaptation numérique fidèle du célèbre jeu de société coopératif **"Le Désert Interdit"**, développée en Java avec une architecture MVC.
 
 ## 🏜️ Présentation du Projet
 
-Dans ce jeu, vous incarnez une équipe d'aventuriers dont l'hélicoptère s'est écrasé au milieu d'un désert aride. Votre seul espoir : retrouver les pièces d'une machine volante légendaire enfouie sous le sable avant que la tempête ne vous ensevelisse ou que vous ne mouriez de soif.
+Dans ce jeu, vous incarnez une équipe d'aventuriers dont l'hélicoptère s'est écrasé au milieu d'un désert aride. Votre seul espoir : retrouver les pièces d'une machine volante légendaire enfouie sous le sable avant que la tempête ne vous ensevelisse ou que vous ne mouriez de soif.  
+
+**Diagramme de classe** : Dessiné d'abord à la main puis designé à la main. [**DIAGRAMME_CLASSE.md**](DIAGRAMME_CLASSE.md)
 
 ## 🚀 Fonctionnalités Implémentées
 
@@ -30,7 +32,7 @@ Chaque joueur possède un rôle unique avec des capacités spéciales :
 
 ## 🏗️ Architecture Technique
 
-Le projet suit le patron de conception **MVC (Modèle-Vue-Contrôleur)** pour assurer une séparation claire entre la logique métier et l'interface utilisateur.
+Le projet suit le patron de conception **MVC (Modèle-Vue-Contrôleur)** pour assurer une séparation claire entre la logique et l'interface utilisateur.
 
 *   **Modèle** : Gère l'état du désert, les règles de déplacement et les conditions de victoire/défaite.
 *   **Vue** : Rendu graphique de la grille, des joueurs et des commandes.
@@ -53,4 +55,8 @@ Le projet suit le patron de conception **MVC (Modèle-Vue-Contrôleur)** pour as
 
 ## 📜 Licence
 
-Ce projet a été réalisé dans un cadre pédagogique. Tous les visuels sont inspirés du jeu original de Matt Leacock.
+Ce projet a été réalisé dans un cadre pédagogique. Tous les visuels sont inspirés du jeu original de Matt Leacock.  
+
+## 👥 Équipe
+* **Manishva VIDJEACOUMAR**
+* **Edam DAMMAK**
