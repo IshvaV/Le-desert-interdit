@@ -2,6 +2,8 @@
 
 Une adaptation numérique fidèle du célèbre jeu de société coopératif **"Le Désert Interdit"**, développée en Java avec une architecture MVC.
 
+**[Télécharger le projet Java](https://github.com/IshvaV/Le-desert-interdit/archive/refs/heads/main.zip)**
+
 ## 🏜️ Présentation du Projet
 
 Dans ce jeu, vous incarnez une équipe d'aventuriers dont l'hélicoptère s'est écrasé au milieu d'un désert aride. Votre seul espoir : retrouver les pièces d'une machine volante légendaire enfouie sous le sable avant que la tempête ne vous ensevelisse ou que vous ne mouriez de soif.  
@@ -42,7 +44,8 @@ Le projet suit le patron de conception **MVC (Modèle-Vue-Contrôleur)** pour as
 
 1.  Clonez le dépôt :
     ```bash
-    git clone [url-du-depot]
+    git clone https://github.com/IshvaV/Le-desert-interdit.git
+    cd Le-desert-interdit
     ```
 2.  Compilez le projet (depuis la racine) :
     ```bash
